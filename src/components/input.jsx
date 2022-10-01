@@ -1,16 +1,37 @@
-import React from "react";
+import React, { useRef } from "react";
 
 function Input(props) {
 	const [taskRef, dateTimeRef, reminderRef] = props.elementRefs;
+	const submitRef = useRef(null);
 
 	//sets div display according to button click
-	const getByDisplayValue = () => {
+	const getContainerDisplayValue = () => {
 		return props.createBtnClicked ? "block" : "none";
+	};
+
+	//for the submit button (visual)
+	const getSubmitValue = () => {
+		return props.editingTask ? "Edit Task" : "Save Task";
+	};
+
+	const getSubmitColor = () => {
+		return taskRef.current.value
+			? props.editingTask
+				? "green"
+				: "rgb(8, 141, 141)"
+			: "grey";
+	};
+
+	const handleTaskInputChange = () => {
+		submitRef.current.style.backgroundColor = getSubmitColor();
+		taskRef.current.style.border = taskRef.current.value
+			? "1px solid black"
+			: "2px solid red";
 	};
 
 	return (
 		<div
-			style={{ display: getByDisplayValue() }}
+			style={{ display: getContainerDisplayValue() }}
 			className="input-container"
 		>
 			<form
@@ -21,6 +42,8 @@ function Input(props) {
 				<div className="task-input-container">
 					<label htmlFor="taskInput">Task</label>
 					<input
+						onFocus={handleTaskInputChange}
+						onChange={handleTaskInputChange}
 						ref={taskRef}
 						type="text"
 						id="taskInput"
@@ -28,7 +51,7 @@ function Input(props) {
 					/>
 				</div>
 				<div className="date-time-input-container">
-					<label htmlFor="dateTimeInput">Date {"&"} Time</label>
+					<label htmlFor="dateTimeInput">Due Date {"&"} Time</label>
 					<input
 						ref={dateTimeRef}
 						type="datetime-local"
@@ -46,10 +69,16 @@ function Input(props) {
 				</div>
 				<div className="submit-btn-container">
 					<input
+						ref={submitRef}
+						style={{
+							backgroundColor: props.editingTask
+								? "green"
+								: "rgb(8, 141, 141)",
+						}}
 						className="submit-btn"
 						type="submit"
 						id="btn"
-						value="Save Task"
+						value={getSubmitValue()}
 					/>
 				</div>
 			</form>

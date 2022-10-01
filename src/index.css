@@ -185,7 +185,7 @@ body{
   min-height: 40px;
 }
 .submit-btn:hover{
-  background-color: cadetblue;
+  opacity: 0.9;
   color: white;
 }
 

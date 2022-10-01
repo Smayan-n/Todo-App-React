@@ -4,6 +4,7 @@ import Header from "./components/header";
 import Input from "./components/input";
 import Tasks from "./components/tasks";
 import "./index.css";
+import { formatDateTime } from "./utility";
 
 function App() {
 	//stateful data
@@ -13,6 +14,8 @@ function App() {
 	);
 	//toggle state for create new task button
 	const [createBtnClicked, setCreateBtnClicked] = useState(false);
+	//bool val storing whether a task is being edited
+	const [editingTask, setEditingTask] = useState(false);
 
 	//DOM element references used in the Input component
 	const taskRef = useRef(null);
@@ -44,6 +47,7 @@ function App() {
 	};
 
 	const handleEdit = (id) => {
+		setEditingTask(true);
 		//open input fields if not open
 		if (!createBtnClicked) {
 			setCreateBtnClicked(true);
@@ -73,12 +77,20 @@ function App() {
 
 	const handleSaveTask = (event) => {
 		//prevents form from reloading page
-		event.preventDefault();
+		if (event) {
+			event.preventDefault();
+		}
+
+		//if a task was being edited, it is done editing
+		if (editingTask) {
+			setEditingTask(false);
+		}
 
 		const task = taskRef.current.value,
 			dueDate = dateTimeRef.current.value,
 			reminder = reminderRef.current.checked;
 
+		//task cannot be blank
 		if (task) {
 			const split = String(Date()).split(" ");
 			const currDate = `${split[2]} ${split[1]} ${split[3]}`;
@@ -99,33 +111,8 @@ function App() {
 			dateTimeRef.current.value = "";
 			reminderRef.current.checked = false;
 		} else {
-			alert("Enter a task!");
+			// taskRef.current.style.border = "2px solid red";
 		}
-	};
-
-	const months = [
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec",
-	];
-	//formats datetime-local input's input
-	const formatDateTime = (dateTime) => {
-		const [date, time] = dateTime.split("T");
-		//y/m/d
-		const splitDate = date.split("-");
-		const newDate = `${splitDate[2]} ${months[parseInt(splitDate[1])]} ${
-			splitDate[0]
-		}`;
-		return `${newDate} | ${time}`;
 	};
 
 	//------------------------------------------------------------------
@@ -137,6 +124,7 @@ function App() {
 				totalTasks={tasks.length}
 			/>
 			<Input
+				editingTask={editingTask}
 				createBtnClicked={createBtnClicked}
 				elementRefs={[taskRef, dateTimeRef, reminderRef]}
 				onSaveTask={handleSaveTask}
