@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import "../styles/input.css";
 
 function Input(props) {
 	const [taskRef, dateTimeRef, reminderRef] = props.elementRefs;
@@ -51,13 +52,8 @@ function Input(props) {
 					/>
 				</div>
 				<div className="date-time-input-container">
-					<label htmlFor="dateTimeInput">Due Date {"&"} Time</label>
-					<input
-						ref={dateTimeRef}
-						type="datetime-local"
-						id="dateTimeInput"
-						placeholder="Enter Date and Time"
-					/>
+					<label htmlFor="dateInput">Due Date</label>
+					<input ref={dateTimeRef} type="date" id="dateInput" />
 				</div>
 				<div className="reminder-input-container">
 					<label htmlFor="reminderInput">Set Reminder</label>

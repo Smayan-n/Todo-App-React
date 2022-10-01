@@ -1,7 +1,7 @@
-import "../index.css";
+import "../styles/header.css";
 
 function Header(props) {
-	const { createBtnClicked, totalTasks, onNewTask } = props;
+	const { createBtnClicked, onNewTask } = props;
 
 	const btnStyle = () => {
 		return createBtnClicked
@@ -13,9 +13,6 @@ function Header(props) {
 		<div className="header">
 			<div className="left-section">
 				<div className="title">Task Tracker</div>
-				<div className="task-cnt">
-					{totalTasks >= 1 ? totalTasks + " task(s)" : "No tasks"}
-				</div>
 			</div>
 			<button
 				onClick={(e) => {

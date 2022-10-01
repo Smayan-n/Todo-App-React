@@ -1,3 +1,4 @@
+import "../styles/task.css";
 import Task from "./task";
 
 function Tasks(props) {

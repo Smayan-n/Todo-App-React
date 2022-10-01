@@ -1,0 +1,31 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+
+/* header component */
+.header{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 60px;
+    font-family: "poppins", sans-serif;
+    margin-bottom: 10px;
+  }
+  .header .left-section{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header .new-task-btn{
+    background: green;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "poppins", sans-serif;
+    font-size: 16px;
+  }

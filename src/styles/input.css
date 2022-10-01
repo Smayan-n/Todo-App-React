@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+/* Input component */
+.input-container{
+    display: flex;
+    flex-direction: column;
+    font-family: "poppins", sans-serif;
+    background-color: white;
+    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.05);
+    gap: 20px;
+    padding: 32px;
+    padding-bottom: 5px;
+    font-size: 22px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+  }
+  
+  .task-input-container, .date-time-input-container, .reminder-input-container, .submit-btn-container{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-bottom: 16px;
+  
+  }
+  .reminder-input-container{
+    flex-direction: row;
+    align-items: center;
+  }
+  .submit-btn{
+    background-color: rgb(8, 141, 141);
+    border: none;
+    min-height: 40px;
+  }
+  .submit-btn:hover{
+    opacity: 0.9;
+    color: white;
+  }
+  
+  input[type="checkbox"]{
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-left: 30px
+  }

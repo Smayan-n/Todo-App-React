@@ -1,10 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useRef, useState } from "react";
+import FunctionBar from "./components/functionBar";
 import Header from "./components/header";
 import Input from "./components/input";
 import Tasks from "./components/tasks";
 import "./index.css";
-import { formatDateTime } from "./utility";
+import { formatDate } from "./utility";
 
 function App() {
 	//stateful data
@@ -12,10 +13,14 @@ function App() {
 	const [tasks, setTasks] = useState(
 		JSON.parse(localStorage.getItem("stored-tasks")) //initializing arr to local storage data
 	);
+
 	//toggle state for create new task button
 	const [createBtnClicked, setCreateBtnClicked] = useState(false);
 	//bool val storing whether a task is being edited
 	const [editingTask, setEditingTask] = useState(false);
+	//vals storing the type of filter and sort active
+	const [filterValue, setFilterValue] = useState("All");
+	const [sortValue, setSortValue] = useState("Default");
 
 	//DOM element references used in the Input component
 	const taskRef = useRef(null);
@@ -44,6 +49,7 @@ function App() {
 			newTasks = tasks.filter((t) => t.id !== id);
 		}
 		setTasks(newTasks);
+		// setAllTasks(newTasks);
 	};
 
 	const handleEdit = (id) => {
@@ -73,6 +79,7 @@ function App() {
 			completed: t.id === id ? checked : t.completed,
 		}));
 		setTasks(newTasks);
+		// setAllTasks(newTasks);
 	};
 
 	const handleSaveTask = (event) => {
@@ -92,15 +99,15 @@ function App() {
 
 		//task cannot be blank
 		if (task) {
-			const split = String(Date()).split(" ");
-			const currDate = `${split[2]} ${split[1]} ${split[3]}`;
+			const currDate = new Date().toISOString().slice(0, 10); //to convert curr date to yyyy-mm-dd format
 			const newTask = {
 				task: task,
-				dueDate: dueDate ? formatDateTime(dueDate) : "No Due Date",
+				dueDate: dueDate ? formatDate(dueDate) : "No Due Date",
+				createdDate: formatDate(currDate),
 				reminder: reminder,
 				completed: false,
-				unformattedDueDate: dueDate, //needed to set it back to input
-				createdDate: currDate,
+				unformattedDueDate: dueDate, //needed to set it back to input when editing and for sorting
+				unformattedCreatedDate: currDate,
 				id: Math.floor(Math.random() * 10000), //temp random key generation
 			};
 
@@ -110,9 +117,74 @@ function App() {
 			taskRef.current.value = "";
 			dateTimeRef.current.value = "";
 			reminderRef.current.checked = false;
-		} else {
-			// taskRef.current.style.border = "2px solid red";
 		}
+	};
+
+	//when the dropdown menu is changed
+	const handleFilterTasks = (filter) => {
+		setFilterValue(filter);
+	};
+
+	//to get filtered tasks at render time
+	const getfilteredTasks = () => {
+		let filtered = tasks;
+		switch (filterValue) {
+			case "Completed":
+				filtered = tasks.filter((t) => t.completed);
+				break;
+			case "Active":
+				filtered = tasks.filter((t) => !t.completed);
+				break;
+			case "With Reminders":
+				filtered = tasks.filter((t) => t.reminder);
+				break;
+			case "With Due Date":
+				filtered = tasks.filter((t) => t.unformattedDueDate);
+				break;
+			default:
+				break;
+		}
+		return filtered;
+	};
+
+	const handleSortTasks = (sort) => {
+		setSortValue(sort);
+	};
+
+	const getSortedTasks = (sorted) => {
+		//making a copy of tasks array to sort
+		sorted = [].concat(sorted);
+		switch (sortValue) {
+			case "Due Date":
+				sorted.sort((t1, t2) => {
+					return (
+						new Date(t1.unformattedDueDate) -
+						new Date(t2.unformattedDueDate)
+					);
+				});
+				break;
+			case "Added Date":
+				sorted.sort((t1, t2) => {
+					return (
+						new Date(t1.unformattedCreatedDate) -
+						new Date(t2.unformattedCreatedDate)
+					);
+				});
+				break;
+			case "Alphabetical Order":
+				sorted.sort((t1, t2) => t1.task.localeCompare(t2.task));
+				break;
+			default:
+				break;
+		}
+		return sorted;
+	};
+	//returns the tasks that should be rendered at any particular time (depending on sortValue and filterValue)
+	const getCurrentTasks = () => {
+		//first filter tasks and then sort them
+		const filtered = getfilteredTasks();
+		const filteredAndSorted = getSortedTasks(filtered);
+		return filteredAndSorted;
 	};
 
 	//------------------------------------------------------------------
@@ -121,7 +193,6 @@ function App() {
 			<Header
 				createBtnClicked={createBtnClicked}
 				onNewTask={handleNewTask}
-				totalTasks={tasks.length}
 			/>
 			<Input
 				editingTask={editingTask}
@@ -130,13 +201,17 @@ function App() {
 				onSaveTask={handleSaveTask}
 			/>
 
-			{tasks.filter((t) => t.completed).length >= 1 && (
-				<button onClick={handleDelete} className="delete-btn">
-					Clear selected
-				</button>
-			)}
+			<FunctionBar
+				completedTasks={
+					getCurrentTasks().filter((t) => t.completed).length
+				}
+				onDelete={handleDelete}
+				totalTasks={getCurrentTasks().length}
+				onFilterTasks={handleFilterTasks}
+				onSortTasks={handleSortTasks}
+			/>
 			<Tasks
-				tasks={tasks}
+				tasks={getCurrentTasks()}
 				onCheck={handleCheck}
 				onDelete={handleDelete}
 				onEdit={handleEdit}

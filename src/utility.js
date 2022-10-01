@@ -12,15 +12,12 @@ const months = [
 	"Nov",
 	"Dec",
 ];
-//formats datetime-local input's input
-const formatDateTime = (dateTime) => {
-	const [date, time] = dateTime.split("T");
-	//y/m/d
-	const splitDate = date.split("-");
-	const newDate = `${splitDate[2]} ${months[parseInt(splitDate[1])]} ${
-		splitDate[0]
-	}`;
-	return `${newDate} | ${time}`;
+//formats date input input
+const formatDate = (date) => {
+	//[year, month, day]
+	const split = date.split("-");
+	const newDate = `${split[2]} ${months[parseInt(split[1]) - 1]} ${split[0]}`;
+	return newDate;
 };
 
-export { formatDateTime };
+export { formatDate };
