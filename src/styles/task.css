@@ -107,7 +107,6 @@
 }
 .dueDate-box,
 .createdDate-box{
-  cursor: pointer;
   position: relative;
 }
 
@@ -138,6 +137,7 @@
 .task-container i{
   color: grey;
   padding: 5px;
+  cursor: pointer;
 }
 .task-container i:hover{
   opacity: 0.6;
