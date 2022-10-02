@@ -5,14 +5,14 @@ import Header from "./components/header";
 import Input from "./components/input";
 import Tasks from "./components/tasks";
 import "./index.css";
-import { formatDate } from "./utility";
+import { formatDate, formatInputDate } from "./utility";
 
 function App() {
 	//stateful data
 	//tasks array
-	const [tasks, setTasks] = useState(
-		JSON.parse(localStorage.getItem("stored-tasks")) //initializing arr to local storage data
-	);
+	//initializing arr to local storage data
+	const loadedData = JSON.parse(localStorage.getItem("stored-tasks"));
+	const [tasks, setTasks] = useState(loadedData ? loadedData : []); //setting initial value to blank array if storage is empty
 
 	//toggle state for create new task button
 	const [createBtnClicked, setCreateBtnClicked] = useState(false);
@@ -53,6 +53,10 @@ function App() {
 	};
 
 	const handleEdit = (id) => {
+		if (editingTask) {
+			alert("Finish editing current task!");
+			return;
+		}
 		setEditingTask(true);
 		//open input fields if not open
 		if (!createBtnClicked) {
@@ -99,15 +103,14 @@ function App() {
 
 		//task cannot be blank
 		if (task) {
-			const currDate = new Date().toISOString().slice(0, 10); //to convert curr date to yyyy-mm-dd format
 			const newTask = {
 				task: task,
-				dueDate: dueDate ? formatDate(dueDate) : "No Due Date",
-				createdDate: formatDate(currDate),
+				dueDate: dueDate ? formatInputDate(dueDate) : "No Due Date",
+				createdDate: formatDate(new Date()),
 				reminder: reminder,
 				completed: false,
 				unformattedDueDate: dueDate, //needed to set it back to input when editing and for sorting
-				unformattedCreatedDate: currDate,
+				unformattedCreatedDate: new Date(),
 				id: Math.floor(Math.random() * 10000), //temp random key generation
 			};
 
@@ -117,6 +120,8 @@ function App() {
 			taskRef.current.value = "";
 			dateTimeRef.current.value = "";
 			reminderRef.current.checked = false;
+		} else {
+			alert("Enter a task!");
 		}
 	};
 

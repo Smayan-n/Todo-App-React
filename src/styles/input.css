@@ -30,6 +30,7 @@
     background-color: rgb(8, 141, 141);
     border: none;
     min-height: 40px;
+    
   }
   .submit-btn:hover{
     opacity: 0.9;

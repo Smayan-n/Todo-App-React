@@ -20,7 +20,9 @@ function FunctionBar(props) {
 				)}
 				<div className="task-cnt">
 					{totalTasks >= 1
-						? totalTasks + " Total Task(s)"
+						? totalTasks === 1
+							? totalTasks + " Result"
+							: totalTasks + " Results"
 						: "No tasks"}
 				</div>
 			</div>

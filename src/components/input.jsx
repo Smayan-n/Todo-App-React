@@ -3,6 +3,7 @@ import "../styles/input.css";
 
 function Input(props) {
 	const [taskRef, dateTimeRef, reminderRef] = props.elementRefs;
+	const { onSaveTask, editingTask } = props;
 	const submitRef = useRef(null);
 
 	//sets div display according to button click
@@ -25,9 +26,6 @@ function Input(props) {
 
 	const handleTaskInputChange = () => {
 		submitRef.current.style.backgroundColor = getSubmitColor();
-		taskRef.current.style.border = taskRef.current.value
-			? "1px solid black"
-			: "2px solid red";
 	};
 
 	return (
@@ -37,7 +35,7 @@ function Input(props) {
 		>
 			<form
 				onSubmit={(e) => {
-					props.onSaveTask(e);
+					onSaveTask(e);
 				}}
 			>
 				<div className="task-input-container">
@@ -67,7 +65,7 @@ function Input(props) {
 					<input
 						ref={submitRef}
 						style={{
-							backgroundColor: props.editingTask
+							backgroundColor: editingTask
 								? "green"
 								: "rgb(8, 141, 141)",
 						}}
