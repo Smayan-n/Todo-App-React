@@ -8,3 +8,5 @@ To add bootstrap into project:
 
 To run React development server:
 <code>npm start</code>
+
+Or you can view the app on https://smayan-n.github.io/Todo-App-React/
