@@ -1,0 +1,9 @@
+{
+  "short_name": "Task Tracker",
+  "name": "React Task Tracker",
+  
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
